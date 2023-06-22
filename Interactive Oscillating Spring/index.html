@@ -1,163 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Interactive Oscillating Spring</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-      }
-    </style>
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <canvas id="canvas"></canvas>
+    <div class="fields">
+      <div class="field"><label for="springConstant">springConstant</label> <input type="range" id="springConstant" value="0.04" min="0.01" max="1" step="0.01" /><span class="result"></span></div>
+      <div class="field"><label for="damping">Damping</label> <input type="range" id="damping" value="0.1" min="0.1" max="1" step="0.1" /><span class="result"></span></div>
+      <div class="field"><label for="mass">Mass</label> <input type="range" id="mass" value="10" min="1" max="100" step="1" /><span class="result"></span></div>
+      <div class="field"><label for="gravity">Gravity</label> <input type="range" id="gravity" value="0.5" min="0.1" max="9.8" step="0.1" /><span class="result"></span></div>
+    </div>
 
-    <script>
-      const body = document.querySelector("body")
-      const canvas = document.getElementById("canvas")
-      const ctx = canvas.getContext("2d")
-      canvas.style.width = "100%"
-      canvas.style.height = "100%"
-      const width = (canvas.width = window.innerWidth - 40)
-      const height = (canvas.height = window.innerHeight - 40)
-
-      const springConstant = 0.04
-      const damping = 0.1
-      const gravity = 0.5
-
-      let spring = {
-        x: width / 2,
-        y: height / 4,
-        targetX: width / 2,
-        targetY: height / 4,
-      }
-
-      let ball = {
-        x: width / 2,
-        y: height / 2,
-        vx: 0,
-        vy: 0,
-        isDragging: false,
-        isResting: true,
-        weight: 12,
-        offsetX: 0,
-        offsetY: 0,
-      }
-
-      const ballRadius = Math.sqrt(ball.weight) * 12 // Adjust the factor (10) as desired
-
-      let animationId
-
-      function update() {
-        if (ball.isDragging) {
-          // Update spring target position based on the ball's position while dragging
-          spring.targetX = ball.x
-          spring.targetY = ball.y + ballRadius
-        } else if (ball.isResting && !ball.isDragging) {
-          // Apply spring force to the ball
-          const dx = ball.x - spring.x
-          const dy = ball.y - spring.y
-          const distance = Math.sqrt(dx * dx + dy * dy)
-          const springForceX = (spring.x - ball.x) * springConstant
-          const springForceY = (spring.y - ball.y) * springConstant
-          const accelerationX = springForceX - ball.vx * damping
-          const accelerationY = springForceY - ball.vy * damping + gravity * ball.weight
-
-          ball.vx += accelerationX
-          ball.vy += accelerationY
-          ball.x += ball.vx
-          ball.y += ball.vy
-
-          spring.targetX = ball.x
-          spring.targetY = ball.y + ballRadius
-        }
-
-        ctx.clearRect(0, 0, width, height)
-        canvas.style.backgroundColor = "blue"
-
-        // Draw spring
-        const dx = ball.x - spring.x
-        const dy = ball.y - spring.y
-        const distance = Math.sqrt(dx * dx + dy * dy)
-        const nx = dx / distance
-        const ny = dy / distance
-
-        ctx.beginPath()
-        ctx.strokeStyle = "black"
-        ctx.lineWidth = 2
-
-        const step = 0.1
-        const iterations = Math.floor(1 / step)
-        const coilWidth = 10
-
-        for (let i = step; i < 1 - step; i += step) {
-          for (let j = 0; j < 1; j += 0.1) {
-            const progress = i + j * step
-            const xx = spring.x + dx * progress
-            const yy = spring.y + dy * progress
-            const sinValue = Math.sin(j * Math.PI * 2)
-            const offsetX = sinValue * ny * coilWidth
-            const offsetY = sinValue * nx * coilWidth
-            ctx.lineTo(xx - offsetX, yy + offsetY)
-          }
-        }
-
-        ctx.stroke()
-
-        // Draw ball
-        ctx.beginPath()
-        ctx.arc(ball.x, ball.y, ballRadius, 0, Math.PI * 2)
-        ctx.fillStyle = "red"
-        ctx.fill()
-
-        animationId = requestAnimationFrame(update)
-      }
-
-      // Mouse event handlers
-      canvas.addEventListener("mousedown", startDragging)
-
-      function startDragging(e) {
-        const rect = canvas.getBoundingClientRect()
-        const mouseX = e.clientX - rect.left
-        const mouseY = e.clientY - rect.top
-
-        if (mouseX >= ball.x && mouseX <= ball.x + ballRadius && mouseY >= ball.y && mouseY <= ball.y + ballRadius) {
-          ball.isDragging = true
-          ball.isResting = false
-          ball.offsetX = mouseX - ball.x
-          ball.offsetY = mouseY - ball.y
-          canvas.addEventListener("mousemove", drag)
-          canvas.addEventListener("mouseup", release)
-        }
-      }
-
-      function drag(e) {
-        if (ball.isDragging) {
-          const rect = canvas.getBoundingClientRect()
-          const mouseX = e.clientX - rect.left
-          const mouseY = e.clientY - rect.top
-
-          ball.x = mouseX
-          ball.y = mouseY
-          body.style.cursor = "grabbing"
-        } else {
-          body.style.cursor = "grab"
-        }
-      }
-
-      function release() {
-        ball.isDragging = false
-        ball.isResting = true
-        body.style.cursor = "grab"
-        cancelAnimationFrame(animationId)
-        update()
-        canvas.removeEventListener("mousemove", drag)
-        canvas.removeEventListener("mouseup", release)
-      }
-
-      // Start the animation
-      update()
-    </script>
+    <script src="./index.js"></script>
   </body>
 </html>
