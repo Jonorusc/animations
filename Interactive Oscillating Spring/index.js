@@ -29,7 +29,7 @@ let ballRadius = Math.sqrt(physics.mass) * 12
   function showResult(rangeElement) {
     const resultElement = rangeElement.parentElement.querySelector(".result")
     resultElement.innerText = rangeElement.value
-    rangeElement.addEventListener("change", () => {
+    rangeElement.addEventListener("input", () => {
       resultElement.innerText = rangeElement.value
       // update physics
       physics = {
