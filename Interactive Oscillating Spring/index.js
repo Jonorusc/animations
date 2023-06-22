@@ -75,7 +75,8 @@ function update() {
     const springForceX = (spring.x - ball.x) * physics.springConstant
     const springForceY = (spring.y - ball.y) * physics.springConstant
     const accelerationX = springForceX - ball.vx * physics.damping
-    const accelerationY = springForceY - ball.vy * physics.damping + physics.gravity * physics.mass
+    // const accelerationY = springForceY - ball.vy * physics.damping + physics.gravity * physics.mass
+    const accelerationY = (springForceY - ball.vy * physics.damping) / physics.mass + physics.gravity
 
     ball.vx += accelerationX
     ball.vy += accelerationY
