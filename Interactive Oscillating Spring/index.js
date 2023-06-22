@@ -9,14 +9,14 @@ let height = (canvas.height = window.innerHeight - 40)
 // ranges
 const springConstantRange = document.getElementById("springConstant")
 const dampingRange = document.getElementById("damping")
-const massRange = document.getElementById("mass")
 const gravityRange = document.getElementById("gravity")
+const massRange = document.getElementById("mass")
 
 let physics = {
-  springConstant: 0.04,
-  damping: 0.1,
-  gravity: 0.5,
-  mass: 10, // ball weight
+  springConstant: Number(springConstantRange.value),
+  damping: Number(dampingRange.value),
+  gravity: Number(gravityRange.value),
+  mass: Number(massRange.value) // ball weight
 }
 
 let ballRadius = Math.sqrt(physics.mass) * 12
