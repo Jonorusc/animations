@@ -35,9 +35,8 @@ class Spring {
         x,
         y,
       })
-
-      return { positions, frames: i }
     }
+    return { positions, frames: i }
   }
 }
 
