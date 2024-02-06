@@ -1,4 +1,4 @@
 # animations
-creating spring animations using javascript
+Applying physics to a spring using `javascript` 
 
 - Interactive Oscillating Spring [https://9fdclx.csb.app/]
